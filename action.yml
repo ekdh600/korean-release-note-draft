@@ -1,0 +1,29 @@
+name: Korean Release Note Draft
+description: Run the fictional sample or prepare a Korean release note draft from your approved change list.
+branding:
+  icon: file-text
+  color: blue
+inputs:
+  mode:
+    description: Run the fictional sample by default, or use draft with your own kit and intake.
+    default: sample
+  kit-path:
+    description: Path to the extracted release notes kit inside the checked-out workspace.
+    default: release-notes-kit
+  source:
+    description: Approved Markdown input file inside the checked-out workspace.
+    default: release-intake.md
+outputs:
+  draft:
+    description: Path to the Markdown file on the runner.
+    value: ${{ steps.prepare.outputs.draft }}
+runs:
+  using: composite
+  steps:
+    - id: prepare
+      shell: bash
+      env:
+        DRAFT_MODE: ${{ inputs.mode }}
+        DRAFT_KIT_PATH: ${{ inputs.kit-path }}
+        DRAFT_SOURCE: ${{ inputs.source }}
+      run: bash "$GITHUB_ACTION_PATH/run.sh"
